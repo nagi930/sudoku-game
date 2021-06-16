@@ -55,16 +55,21 @@ def quiz_board(board, count=45):
     return board_
 
 
+def make_board():
+    temp = [[' '] * 9 for _ in range(9)]
+    dfs(temp)
+    return quiz_board(temp)
+
+
 class Game(Entity):
     def __init__(self):
         super().__init__()
-        temp = [[' '] * 9 for _ in range(9)]
-        dfs(temp)
+        quiz = make_board()
         self.auto_mode = False
         self.board = [[Block(
             position=((-4 + col) * 0.8, (4 - row) * 0.8),
             loc=(row, col),
-            text=quiz_board(temp)[row][col],
+            text=quiz[row][col],
             click_callback=self.click_callback,
             input_callback=self.input_callback)
             for col in range(9)]
