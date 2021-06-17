@@ -144,12 +144,15 @@ class Game(Entity):
         for i in range(9):
             for j in range(9):
                 if self.num_board[i][j] == ' ':
-                    self.board[i][j].text_color = color.white
+                    self.board[i][j].text_color = color.smoke
                     continue
                 if not is_valid(i, j, self.num_board, self.num_board[i][j]):
                     self.board[i][j].text_color = color.red
                 else:
-                    self.board[i][j].text_color = color.white
+                    if self.board[i][j].changeable:
+                        self.board[i][j].text_color = color.smoke
+                    else:
+                        self.board[i][j].text_color = color.black
         if self.is_completed():
             self.success.visible = True
 
@@ -172,6 +175,8 @@ class Block(Button):
         self.scale = 0.75
         self.clicked = False
         self.text = text
+        self.text_color = color.smoke if self.text == ' ' else color.black
+        self.changeable = True if self.text_color == color.smoke else False
         self.click_callback = click_callback
         self.input_callback = input_callback
 
@@ -194,6 +199,8 @@ class Block(Button):
                 self.clicked = False
 
     def on_click(self):
+        if not self.changeable:
+            return
         self.click_callback(self.loc)
         if not self.clicked:
             self.clicked = True
